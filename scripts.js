@@ -1,20 +1,66 @@
-var sec= document.getElementsByTagName('section')[0]
+var sec = document.getElementsByTagName('section')[0]
 
-var homeprod=products.slice(0,5)
+var homeprod = products.slice(0, 5)
 console.log(homeprod);
 
-
-for (i of homeprod){
-    sec.innerHTML+=`    <div class="product">
+for (i of homeprod) {
+    let div = document.createElement('div')
+    let button = document.createElement('button')
+    button.innerHTML = "add to cart"
+    div.className = "product"
+    div.innerHTML += `    
 
     <img src=${i.image} />
     <h3>${i.title}</h3>
-    <p>${i.description.slice(0,100)}...</p>
-    <button>add to cart</button>
+    <p>${i.description.slice(0, 100)}...</p>
+    
+`
+
+    button.setAttribute('id', i.id)
+    {
+        localStorage.getItem('user') ? button.addEventListener('click', function () {
+            console.log(button.getAttribute('id'));
+            let cart = JSON.parse(localStorage.getItem('cart'))
 
 
-</div>`
+            if (cart) {
+
+                for (let i = 0; i < cart.length; i++) {
+
+                    if (cart[i].user == localStorage.getItem('user')) {
+                        var userindex = cart[i]
+                        var index = i
+
+                    }
+                    else {
+                        userindex = { user: localStorage.getItem('user'), mypprods: [] }
+                        index = cart.length
+                    }
+                }
+                {
+                    userindex.mypprods.find((e) => e == button.getAttribute('id')) ? null :
+                        userindex = {
+                            user: localStorage.getItem('user'),
+                            mypprods: [...userindex.mypprods, button.getAttribute('id')]
+
+                        }
+
+                    cart[index] = userindex
+                }
+            }
+            else {
+                cart = [{
+                    user: localStorage.getItem('user'),
+                    mypprods: [button.getAttribute('id')]
+                }]
+            }
+            localStorage.setItem('cart', JSON.stringify(cart))
+        }) : null
+    }
+    div.appendChild(button)
+    sec.appendChild(div)
 }
+
 
 
 // function addtocard
